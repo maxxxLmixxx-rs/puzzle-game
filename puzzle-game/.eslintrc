@@ -1,0 +1,19 @@
+{
+  "parser": "babel-eslint",
+  "rules": { },
+  "env": {
+    "es6": true,
+    "browser": true
+  },
+  "extends": [
+    "airbnb",
+    // "airbnb/hooks",
+    "eslint:recommended",
+    "plugin:import/errors",
+    "airbnb-typescript/base",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking"
+  ]
+}

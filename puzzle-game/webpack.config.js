@@ -48,7 +48,7 @@ module.exports = {
     path: path.resolve(__dirname, 'build')
   },
   resolve: {
-    extensions: ['.js', '.json'],
+    extensions: ['.js', '.ts', '.json'],
     alias: {
       '@assets': path.resolve(__dirname, 'source/assets'),
       '@images': path.resolve(__dirname, 'source/assets/images'),

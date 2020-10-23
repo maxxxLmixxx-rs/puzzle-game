@@ -22,26 +22,29 @@ const optimization = () => {
 const cssLoader = (extra = []) => {
   const config = [{
     loader: MiniCssExtractPlugin.loader,
-    options: { hmr: isDev, reloadAll: true }
+    options: { hmr: isDev, reloadAll: true },
   }, 'css-loader'];
   if (extra) config.push(...extra);
   return config;
 };
 
-const babelLoader = (extra = []) => {
+const babelLoader = (presets = [], plugins = []) => {
   const config = {
     loader: 'babel-loader',
-    options: { presets: ['@babel/preset-env'] }
-  };
-  if (extra) config.options.presets.push(...extra);
-  return config;
+    options: { 
+      // presets: ['@babel/preset-env', ...presets],
+      presets: [...presets],
+      plugins: [...plugins]
+    }
+  }; return config;
 };
 
 module.exports = {
   context: path.resolve(__dirname, 'source'),
   mode: 'development',
   entry: {
-    main: ['@babel/polyfill', './index.js'],
+    // BABEL ? main: ['@babel/polyfill', './_index.js'],
+    main: ['./_index.js'],
   },
   output: {
     filename: filename('js'),
@@ -102,15 +105,19 @@ module.exports = {
         exclude: /node_modules/
       },
       {
+        //? test: /\.(ts|js)$/,
+        //? use: ['ts-loader'], 
+        //? exclude: /node_modules/
+
         test: /\.ts$/,
         use: babelLoader(['@babel/preset-typescript']),
         exclude: /node_modules/
       },
-      {
-        test: /\.jsx$/,
-        use: babelLoader(['@babel/preset-react']),
-        exclude: /node_modules/
-      }
+      // BABEL ? {
+      // BABEL ?   test: /\.jsx$/,
+      // BABEL ?   use: babelLoader(['@babel/preset-react']),
+      // BABEL ?   exclude: /node_modules/
+      // BABEL ? }
     ]
   }
 }

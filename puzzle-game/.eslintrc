@@ -1,5 +1,6 @@
 {
   "parser": "babel-eslint",
+  // "parser": "@typescript-eslint/parser",
   "rules": {
     "linebreak-style": ["error", "windows"],
     "eol-last": "off"
@@ -8,12 +9,17 @@
     "es6": true,
     "browser": true
   },
+  "plugins": [
+    "@typescript-eslint",
+    "eslint-plugin-node"
+  ],
   "extends": [
     "airbnb",
     "eslint:recommended",
-    "plugin:import/errors",
-    "plugin:import/warnings",
-    "plugin:import/typescript"
+    "plugin:@typescript-eslint/recommended"
+    // "plugin:import/errors",
+    // "plugin:import/warnings",
+    // "plugin:import/typescript",
   ],
   "ignorePatterns": ["webpack.config.js"]
 }

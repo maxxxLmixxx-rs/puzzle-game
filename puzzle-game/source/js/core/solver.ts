@@ -35,6 +35,7 @@ class GemGame implements PuzzleSolver {
       case 3: throw new Error('No available moves');
       case 4: throw new Error('Swap should be only one move');
       case 5: throw new Error('Wrong direction input');
+      case 6: throw new Error('Try move tile/blank to completed XY');
       default: throw new Error();
     }
   }
@@ -74,12 +75,16 @@ class GemGame implements PuzzleSolver {
   /* ** SOLVE MODULE */
 
   private completed: XY[] = [];
+  private isCompleted = ([x, y]) => {
+    return this.completed.some(([_x, _y]) => {
+      return _x === x && _y === y;
+    });
+  }
 
   solve(mx?: number[][]) {
     if (!this.isSolvable(mx)) return null;
     if (!mx && !this.matrix) this.errors(2);
     if (mx) this.matrix = mx;
-/*! DELETE ================================*/console.dir(this.currentMX);
     this.pseudoRecursiveSolve();
     return this.logger.get();
   }
@@ -119,39 +124,46 @@ class GemGame implements PuzzleSolver {
 
   private solve3x2([t1, t2, t3, t4, t5]: number[]) {
     let x, y, x1, y1;
+    let xyL = this.currentMX.length - 1;
     [t1, t2, t3, t4, t5].sort((a, b) => a - b);
     
+    /*move out t4 from column*/
+    [ [x, y], [x1, y1] ] = this.getXY(t4);
+    this.moveTile([x, y], [xyL, xyL - 1]); 
+    
+    /*##1 
+    move last two (col): PICTURE 1-2*/
     [ [x, y], [x1, y1] ] = this.getXY(t1);
     this.moveTile([x, y], [x1, y1 + 1]);
     this.completed.push([x1, y1 + 1]);
-    
+    /*##2 
+    move last two (col) #2: PICTURE 1-3*/
     [ [x, y], [x1, y1] ] = this.getXY(t4);
     this.moveTile([x, y], [x1 + 1, y1]);
     this.completed.pop();
     this.completed.push([x1 + 1, y1]);
-    
+    /*##3 
+    move last two (col) #3: PICTURE 1-4*/
     this.moveBlank([x1, y1]);
     this.completed.pop();
     this.moveBlank([x1 + 1, y1]);
     this.completed.push([x1, y1]);
 
+    /*solve 2x2 puzzle*/
     [ [x, y], [x1, y1] ] = this.getXY(t2);
     this.moveTile([x, y], [x1, y1]);
     this.completed.push([x1, y1]);
 
-    this.moveBlank([
-      this.currentMX.length - 1,
-      this.currentMX.length - 1
-    ]);
+    this.moveBlank([xyL, xyL]);
   }
 
   private solveTilesLine(tiles: number[], lastTwo: number[]): void {
-    const isCompleted = (t: number): boolean => {
+    const isTCompleted = (t: number): boolean => {
       let [ [x, y] ] = this.getXY(t);
-      return this.completed.some(([_x, _y]) => _x === x && _y === y);
+      return this.isCompleted([x, y]);
     };
     tiles.forEach(t => {
-      if (lastTwo.includes(t) || isCompleted(t)
+      if (lastTwo.includes(t) || isTCompleted(t)
       ) return null;
       let [ [x, y], [x1, y1] ] = this.getXY(t);
       this.moveTile([x, y], [x1, y1]);
@@ -175,22 +187,17 @@ class GemGame implements PuzzleSolver {
     /* function declaration */
 
     function moveOut(line: string): void {
-      let [ [ x,  y] ] = this.getXY(t1);
-      let [ [_x, _y] ] = this.getXY(t2);
+      let [ [x, y] ] = this.getXY(t2);
       switch (line) {
-        case M.ROW: 
-          if ( y - _desY < 2) this.moveTile([x, y], [x, y + 1]);
-          if (_y - _desY < 2) this.moveTile([_x, _y], [_x, _y + 1]);
-          if (_y - _desY >= 2 && y - _desY >= 2) return null;
+        case M.ROW:
+          if (y - _desY < 2) this.moveTile([x, y], [x, _desY + 2]);
         break;
         case M.COL: 
-          if ( x - _desX < 2) this.moveTile([x, y], [x + 1, y]);
-          if (_x - _desX < 2) this.moveTile([_x, _y], [_x + 1, _y]);
-          if (_x - _desX >= 2 && x - _desX >= 2) return null;
-        } return moveOut.call(this, line);
+          if (x - _desX < 2) this.moveTile([x, y], [_desX + 2, y]);
+        } return null;
     }
     
-   /** PICTURER 1
+   /** PICTURE 1
      *  x x x    x x 2    x x 2    
      *  2 x x -> x x x -> x x 3 -> 
      *  0 3 x    0 3 x    0 x x    
@@ -205,15 +212,14 @@ class GemGame implements PuzzleSolver {
 
       let [ [x, y] ] = this.getXY(t1);
         this.moveTile([x, y], [xL, yL]);
-      this.completed.push([xL, yL]);
 
       let [ [x1, y1] ] = this.getXY(t2);
         this.moveTile([x1, y1], [xL, yL + 1]);
-      this.completed.pop();
+
       this.completed.push([xL, yL + 1]);
 
       this.moveBlank([xL - 1, yL]);
-      this.completed.pop();
+      this.completed.pop(); 
 
       this.moveBlank([xL, yL]);
       this.moveBlank([xL, yL + 1]);
@@ -227,11 +233,9 @@ class GemGame implements PuzzleSolver {
 
       let [ [x, y] ] = this.getXY(t1);
         this.moveTile([x, y], [xL, yL]);
-      this.completed.push([xL, yL]);
 
       let [ [x1, y1] ] = this.getXY(t2);
         this.moveTile([x1, y1], [xL + 1, yL]);
-      this.completed.pop();
       this.completed.push([xL + 1, yL]);
 
       this.moveBlank([xL, yL - 1]);
@@ -252,6 +256,9 @@ class GemGame implements PuzzleSolver {
   */
 
   private moveTile([x, y]: XY, [x1, y1]: XY) {
+    if (x === x1 && y === y1) return;
+    if (this.isCompleted([x1, y1])) this.errors(6);
+
     const move = {
       u: () => { this.moveBlank([x, y - 1], [ [x, y] ]); this.moveBlank([x, y]); y--; },
       d: () => { this.moveBlank([x, y + 1], [ [x, y] ]); this.moveBlank([x, y]); y++; },
@@ -259,30 +266,26 @@ class GemGame implements PuzzleSolver {
       r: () => { this.moveBlank([x + 1, y], [ [x, y] ]); this.moveBlank([x, y]); x++; },
     };
 
-    const isXCompleted = this.completed.some(([x, y]) => x === x1);
-    const isYCompleted = this.completed.some(([x, y]) => y === y1);
-
     const moveBX = () => {
       while (x !== x1) {
+        if (x1 - x < 0 && this.isCompleted([x - 1, y])) return;
+        if (x1 - x > 0 && this.isCompleted([x + 1, y])) return;
+
         if (x1 - x < 0) move.l();
         if (x1 - x > 0) move.r();
       }
     }, moveBY = () => {
       while (y !== y1) {
+        if (y1 - y < 0 && this.isCompleted([x, y - 1])) return;
+        if (y1 - y > 0 && this.isCompleted([x, y + 1])) return;
+
         if (y1 - y < 0) move.u();
         if (y1 - y > 0) move.d();
       }
     }
 
-    switch (true) {
-      case isXCompleted: moveBY(); moveBX(); break;
-      case isYCompleted: moveBX(); moveBY(); break; 
-      default: 
-      if (Math.abs(y1 - y) > Math.abs(x1 - x)) 
-      { moveBX(); moveBY(); 
-      } else { 
-        moveBY(); moveBX(); 
-      }
+    while (x !== x1 || y !== y1) {
+      moveBX(); moveBY();
     }
   }
 
@@ -293,7 +296,9 @@ class GemGame implements PuzzleSolver {
   */
 
   private moveBlank([x1, y1]: XY, exclude: XY[] = []) {
-    
+    if (this.isCompleted([x1, y1])) this.errors(6);
+
+    const isExclude = ([x, y]) => exclude.some(([_x, _y]) => x === _x && y === _y);
     const createNode = ({ x = null, y = null, prev = null, m = 'root' }) => {
       if (m === 'u' && prev && prev.m === 'd') return null;
       if (m === 'd' && prev && prev.m === 'u') return null;
@@ -301,8 +306,7 @@ class GemGame implements PuzzleSolver {
       if (m === 'r' && prev && prev.m === 'l') return null;
       if (x < 0 || x > this.currentMX.length - 1) return null;
       if (y < 0 || y > this.currentMX.length - 1) return null;
-      if (exclude.some(([_x, _y]) => x === _x && y === _y)) return null;
-      if (this.completed.some(([_x, _y]) => x === _x && y === _y)) return null;
+      if (this.isCompleted([x, y]) || isExclude([x, y])) return null;
 
       let G = x == null || y == null ? null : this.manhattanDistance([x, y], [x1, y1]);
       let H = prev ? prev.H + 1 : 0;
@@ -488,13 +492,19 @@ class GemGame implements PuzzleSolver {
   }
 }
 
-const gemGame = new GemGame(
-  [
-    [ 1,  2, 13, 3],
-    [ 5,  9, 10, 4],
-    [12,  0,  8, 6],
-    [15, 14, 11, 7],
-  ]
-);
+const gemGame = new GemGame([
+       [ 1,  2, 13, 3],
+       [ 5,  9, 10, 4],
+       [12,  0,  8, 6],
+       [15, 14, 11, 7],
 
-console.log(gemGame.solve());
+//    [ 6, 13,  7, 10],
+//    [ 8,  9, 11,  0],
+//    [15,  2, 12,  5],
+//    [14,  3,  1,  4],
+
+//  [  1,  2,  3,  4 ],
+//  [  5,  6, 10,  7 ],
+//  [ 13, 14,  8,  0 ],
+//  [ 15,  9, 12, 11 ],
+]);

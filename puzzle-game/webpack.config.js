@@ -44,7 +44,8 @@ module.exports = {
   mode: 'development',
   entry: {
     // BABEL ? main: ['@babel/polyfill', './_index.js'],
-    main: ['./_index.js'],
+    //         main: ['./_index.js'],
+    main: ['@babel/polyfill', './_index.js'],
   },
   output: {
     filename: filename('js'),

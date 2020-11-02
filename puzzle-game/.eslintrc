@@ -1,6 +1,6 @@
 {
-  "parser": "babel-eslint",
-  // "parser": "@typescript-eslint/parser",
+  // "parser": "@babel/eslint-parser",
+  "parser": "@typescript-eslint/parser",
   "rules": {
     "linebreak-style": ["error", "windows"],
     "eol-last": "off"
@@ -16,10 +16,10 @@
   "extends": [
     "airbnb",
     "eslint:recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
     "plugin:@typescript-eslint/recommended"
-    // "plugin:import/errors",
-    // "plugin:import/warnings",
-    // "plugin:import/typescript",
   ],
-  "ignorePatterns": ["webpack.config.js"]
+  "ignorePatterns": ["webpack.config.js", "**/pages/puzzle/js/core/"]
 }

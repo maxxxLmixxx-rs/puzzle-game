@@ -1,2 +1,2 @@
-import './_index.scss';
-import './js/core/solver.ts';
+import './pages/puzzle/_index';
+import './pages/puzzle/_index.scss';

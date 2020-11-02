@@ -17,6 +17,7 @@ class RandomMatrixCreator implements Randomize {
   private MAX = 8;
 
   private _size: number;
+
   constructor(size: number = 3) {
     this.size = size;
   }
@@ -38,7 +39,7 @@ class RandomMatrixCreator implements Randomize {
 
   generator(number: number = this.size) {
     this.size = number;
-    let generator = function* () {
+    const generator = function* () {
       while (true) {
         yield this.mxCreator();
       }};
@@ -50,7 +51,7 @@ class RandomMatrixCreator implements Randomize {
    */
 
   private mxCreator(): number[][] {
-    let numberGenerator = this.numberGenerator();
+    const numberGenerator = this.numberGenerator();
     return Array.from({length: this.size}).map(_ => {
       return Array.from({length: this.size}).map(_ => {
         return numberGenerator.next().value;
@@ -63,11 +64,11 @@ class RandomMatrixCreator implements Randomize {
    */
 
   private numberGenerator(): Generator<number> {
-    let generator = function* () {
-      let numbers = Array.from({length: this.size ** 2})
+    const generator = function* () {
+      const numbers = Array.from({length: this.size ** 2})
       .map((_, ix) => ix);
       while (numbers.length) {
-        let ix = Math.floor(Math.random() * numbers.length);
+        const ix = Math.floor(Math.random() * numbers.length);
         yield numbers.splice(ix, 1)[0];
       }}; 
     return generator.call(this);

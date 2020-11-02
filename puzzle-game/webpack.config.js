@@ -28,6 +28,16 @@ const cssLoader = (extra = []) => {
   return config;
 };
 
+const pagesHTMLWebpackPlugin = (pagesArray) => {
+  return pagesArray.map(title => {
+    return new HTMLWebpackPlugin({
+      title, filename: 'index.html',
+      minify: { collapseWhitespace: !isDev },
+      template: `./pages/${title.toLowerCase()}/index.html`
+    });
+  });
+}
+
 const babelLoader = (presets = [], plugins = []) => {
   const config = {
     loader: 'babel-loader',
@@ -72,13 +82,10 @@ module.exports = {
   },
   devtool: isDev ? 'source-map' : '',
   plugins: [
-    new HTMLWebpackPlugin({
-      template: './index.html',
-      minify: { collapseWhitespace: !isDev }
-    }),
     new ESLintPlugin(),
     new StylelintPlugin(),
     new CleanWebpackPlugin(),
+    ...pagesHTMLWebpackPlugin(['Puzzle']),
     new MiniCssExtractPlugin({ filename: filename('css') }),
     // new CopyWebpackPlugin([ { from: '', to: ''}, { from: '', to: ''} ])
   ],

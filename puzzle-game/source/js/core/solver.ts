@@ -477,7 +477,7 @@ class GemGame implements PuzzleSolver {
     }, 0);
   }
 
-  private isAppropriate(mx: number[][] = this.matrix) {
+  isAppropriate(mx: number[][] = this.matrix) {
     if (this.__isSquare(mx)) {
       return mx.flat().every(el =>
         Number.isInteger(el) && el <= mx.length ** 2 && el > -1
@@ -492,19 +492,21 @@ class GemGame implements PuzzleSolver {
   }
 }
 
-const gemGame = new GemGame([
-       [ 1,  2, 13, 3],
-       [ 5,  9, 10, 4],
-       [12,  0,  8, 6],
-       [15, 14, 11, 7],
+// const gemGame = new GemGame([
+//        [ 1,  2, 13, 3],
+//        [ 5,  9, 10, 4],
+//        [12,  0,  8, 6],
+//        [15, 14, 11, 7],
 
-//    [ 6, 13,  7, 10],
-//    [ 8,  9, 11,  0],
-//    [15,  2, 12,  5],
-//    [14,  3,  1,  4],
+// //    [ 6, 13,  7, 10],
+// //    [ 8,  9, 11,  0],
+// //    [15,  2, 12,  5],
+// //    [14,  3,  1,  4],
 
-//  [  1,  2,  3,  4 ],
-//  [  5,  6, 10,  7 ],
-//  [ 13, 14,  8,  0 ],
-//  [ 15,  9, 12, 11 ],
-]);
+// //  [  1,  2,  3,  4 ],
+// //  [  5,  6, 10,  7 ],
+// //  [ 13, 14,  8,  0 ],
+// //  [ 15,  9, 12, 11 ],
+// ]);
+
+export default GemGame;

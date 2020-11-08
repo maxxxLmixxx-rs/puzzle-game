@@ -6,24 +6,54 @@
   <title>Puzzle game</title>
 </head>
 <body>
-  <div class="root">
-    <aside class="selector">
+  <div class="root dark-theme">
+    <!-- <aside class="selector">
       <img class="selector__img" src="" alt="">
       <img class="selector__img" src="" alt="">
       <img class="selector__img" src="" alt="">
       <img class="selector__img" src="" alt="">
-    </aside>
-    <div class="puzzle">
-      <div class="puzzle__tile">1</div>
-      <div class="puzzle__tile">2</div>
-      <div class="puzzle__tile">3</div>
-      <div class="puzzle__tile">4</div>
-      <div class="puzzle__tile">5</div>
-      <div class="puzzle__tile">6</div>
-      <div class="puzzle__tile">7</div>
-      <div class="puzzle__tile">8</div>
-      <div class="puzzle__tile">0</div>
-    </div>
+    </aside> -->
+    <header class="header"></header>
+    
+    <main class="main">
+      <div class="image-chooser"></div>
+      <div class="puzzle-container">
+          <div class="puzzle puzzle--3x3">
+            <div class="puzzle__tile" data-tile="1">1</div>
+            <div class="puzzle__tile" data-tile="2">2</div>
+            <div class="puzzle__tile" data-tile="3">3</div>
+            <div class="puzzle__tile" data-tile="4">4</div>
+            <div class="puzzle__tile" data-tile="5">5</div>
+            <div class="puzzle__tile" data-tile="6">6</div>
+            <div class="puzzle__tile" data-tile="7">7</div>
+            <div class="puzzle__tile" data-tile="8">8</div>
+            <div class="puzzle__tile" data-tile="0">0</div>
+          </div>
+      </div>
+      <div class="preferences">
+        <div class="preferences-icon">
+          <svg width="1" height="1" viewBox="0 0 150 120">
+            <line x1="30"  x2="30"  y1="0" y2="115" stroke-width="7" stroke-linecap="round" />
+            <line x1="75"  x2="75"  y1="0" y2="115" stroke-width="7" stroke-linecap="round" />
+            <line x1="120" x2="120" y1="0" y2="115" stroke-width="7" stroke-linecap="round" />
+            <circle cx="30"  cy="100" r="20" stroke-width="7" />
+            <circle cx="75"  cy="60"  r="20" stroke-width="7" />
+            <circle cx="120" cy="20"  r="20" stroke-width="7" />
+          </svg>
+        </div>
+        <div class="preferences__menu">
+          <div class="preferences__size-item">3x3</div>
+          <div class="preferences__size-item">4x4</div>
+          <div class="preferences__size-item">5x5</div>
+          <div class="preferences__size-item">6x6</div>
+          <div class="preferences__size-item">7x7</div>
+          <div class="preferences__size-item">8x8</div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer"></footer>
+
   </div>
 </body>
 </html>

@@ -1,8 +1,8 @@
 @import '~normalize.css';
-//
-@import './css/fonts';
-@import './css/colors';
-@import './css/general';
-//
-@import './css/aside/aside';
-@import './css/puzzle/board';
+// GENERAL
+@import './cs.js/fonts';
+@import './cs.js/colors';
+@import './cs.js/general';
+// MAIN
+@import './cs.js/puzzle/board';
+@import './cs.js/preferences/preferences';
